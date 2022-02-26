@@ -1,1 +1,12 @@
 <h1>Attendance</h1>
+
+<!--noformat-->
+<% pendingCourses.forEach( obj => { %>
+
+<div>
+    Course: <%= obj.courseId %>
+    Attendance: <%= obj.daysAttended %>/<%= obj.daysTotal %>  =>  <%= (obj.daysAttended/obj.daysTotal * 100).toFixed(1) %>% 
+</div>
+
+<% }) %> 
+<!--noformat-->

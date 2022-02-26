@@ -1,1 +1,23 @@
 <h1>Time Table</h1>
+
+<!--noformat-->
+<% 
+var strDate = 'dd-mm-yyyy day'
+  .replace('yyyy', today.getFullYear())
+  .replace('mm', today.getMonth()+1)
+  .replace('dd', today.getDate())
+  .replace('day', today.getDay());
+%>
+<%= strDate %> 
+<!--noformat-->
+
+<hr>
+
+<!--noformat-->
+<% coursesToday.forEach(obj => { %>
+<div>
+    Timing: <%= obj.courseStartTime %>  =>  <%= obj.courseEndTime %>
+    Course: <%= obj.courseId %> 
+</div>
+<% }) %> 
+<!--noformat-->
