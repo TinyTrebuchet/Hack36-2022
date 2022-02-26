@@ -9,15 +9,17 @@ const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const mongoose = require('mongoose')
+
+mongoose.connect("mongodb://localhost/hack36", { family: 4 })
 
 const initializePassport = require('./passport-config')
+const User = require('./User')
 initializePassport(
   passport,
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
+  (email) => User.findOne({ "email": { $eq: email } }),
+  (id) => User.findOne({ "_id": { $eq: id } })
 )
-
-const users = []
 
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
@@ -52,8 +54,7 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
 app.post('/register', checkNotAuthenticated, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    users.push({
-      id: Date.now().toString(),
+    await User.create({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword
@@ -68,6 +69,21 @@ app.delete('/logout', (req, res) => {
   req.logOut()
   res.redirect('/login')
 })
+
+
+
+app.get('/timetable', checkAuthenticated, (req, res) => {
+  res.render('timetable.ejs')
+})
+
+app.get('/courses', checkAuthenticated, (req, res) => {
+  res.render('courses.ejs')
+})
+
+app.get('/attendance', checkAuthenticated, (req, res) => {
+  res.render('attendance.ejs')
+})
+
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

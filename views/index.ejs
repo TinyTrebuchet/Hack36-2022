@@ -1,4 +1,20 @@
-<h1>Hi <%= name %></h1>
-<form action="/logout?_method=DELETE" method="POST">
-  <button type="submit">Log Out</button>
-</form>
+<h1>Hi <%= name %>
+</h1>
+
+<div>
+  <form action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Log Out</button>
+  </form>
+</div>
+
+<div>
+  <div>
+    <a href="timetable" role="button">Time Table</a>
+  </div>
+  <div>
+    <a href="courses" role="button">Course Management</a>
+  </div>
+  <div>
+    <a href="attendance" role="button">Attendance</a>
+  </div>
+</div>

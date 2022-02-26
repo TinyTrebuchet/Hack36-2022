@@ -1,25 +1,35 @@
 {
-  "name": "current-project",
+  "name": "hack36",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "passport-config.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TinyTrebuchet/Hack36-2022.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TinyTrebuchet/Hack36-2022/issues"
+  },
+  "homepage": "https://github.com/TinyTrebuchet/Hack36-2022#readme",
   "dependencies": {
-    "bcrypt": "^3.0.6",
-    "ejs": "^2.6.2",
-    "express": "^4.17.1",
-    "express-flash": "0.0.2",
-    "express-session": "^1.16.2",
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.2",
     "method-override": "^3.0.0",
-    "passport": "^0.4.0",
+    "mongoose": "^6.2.3",
+    "passport": "^0.5.2",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "dotenv": "^8.0.0",
-    "nodemon": "^1.19.1"
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
   }
 }
