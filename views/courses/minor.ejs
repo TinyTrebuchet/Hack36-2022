@@ -1,0 +1,15 @@
+<h1>Minors</h1>
+
+<!--noformat-->
+<% minors.forEach(minor => { %>
+<div>
+    Basket: <%= minor.name %> <hr>
+    <% minor.courses.forEach(course => { %> 
+    <div>
+        Course Id: <%= course._id %> <br>
+        Course Name: <%= course.name %> <br>
+    </div>
+    <% }) %> 
+</div>
+<% }) %>  
+<!--noformat-->

@@ -285,9 +285,25 @@ app.get('/courses/basket', checkAuthenticated, async (req, res) => {
 
   }
 
-  console.log(JSON.stringify(newBaskets))
-
   res.render('courses/basket.ejs', { baskets: newBaskets })
+})
+
+app.get('/courses/minor', checkAuthenticated, async (req, res) => {
+  const minors = await Minor.where()
+  const newMinors = []
+  for (const minor of minors) {
+    const courseArr = []
+    for (const courseId of minor.courses) {
+      const course = await Course.findById(courseId).select("name")
+      if (course) {
+        courseArr.push(course)
+      }
+    }
+    newMinors.push({ name: minor.name, courses: courseArr })
+
+  }
+
+  res.render('courses/minor.ejs', { minors: newMinors })
 })
 
 
