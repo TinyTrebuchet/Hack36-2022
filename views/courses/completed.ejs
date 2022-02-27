@@ -1,0 +1,14 @@
+<h1>Completed courses</h1>
+
+<div>
+    <!--noformat-->
+    <% completedCourses.forEach(obj => { %>
+        <div>
+            Course Id: <%= obj.courseId %> <br>
+            Course Name: <%=  obj.courseName %> <br>
+            Semester: <%= obj.semester %> <br>
+            Grade: <%= obj.grade %> <br>
+        </div>
+    <% }) %> 
+    <!--noformat-->
+</div>

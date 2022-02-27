@@ -1,0 +1,68 @@
+<h1>Course List</h1>
+
+<div>
+    Message: <%= message %>
+</div>
+
+<div>
+    <h3>Enrolled Courses</h3>
+    <hr>
+    <!--noformat-->
+    <% enrolledCourses.forEach(obj => { %> 
+    <div>
+        Course Id: <%= obj._id %> <br>
+        Course Name: <%= obj.name %> <br>
+        <form action="list" method="post">
+            <input type="hidden" id="courseId" name="courseId" value="<%= obj._id %>">
+            <input type="hidden" id="courseName" name="courseName" value="<%= obj.name %>">
+            <button type="submit" name="action" value="unenroll">Un-Enroll</button>
+        </form>
+        <form action="list" method="post">
+            <input type="hidden" id="courseId" name="courseId" value="<%= obj._id %>">
+            <input type="hidden" id="courseName" name="courseName" value="<%= obj.name %>">
+            <label for="grade">Grade:</label>
+            <input id="grade" name="grade"><br>
+            <label for="semester">Semester:</label>
+            <input id="semester" name="semester"><br>
+            <button type="submit" name="action" value="completed">Completed</button>
+        </form>
+    </div>
+    <% }) %> 
+    <!--noformat-->
+</div>
+
+<div>
+    <h3>Un-Enrolled Courses</h3>
+    <hr>
+    <!--noformat-->
+    <% unEnrolledCourses.forEach(obj => { %> 
+    <div>
+        Course Id: <%= obj._id %> <br>
+        Course Name: <%= obj.name %> <br>
+        <form action="list" method="post">
+            <input type="hidden" id="courseId" name="courseId" value="<%= obj._id %>">
+            <input type="hidden" id="courseName" name="courseName" value="<%= obj.name %>">
+            <button type="submit" name="action" value="enroll">Enroll</button>
+        </form>
+    </div>
+    <% }) %> 
+    <!--noformat-->
+</div>
+
+<div>
+    <h3>Completed Courses</h3>
+    <hr>
+    <!--noformat-->
+    <% completedCourses.forEach(obj => { %> 
+    <div>
+        Course Id: <%= obj._id %> <br>
+        Course Name: <%= obj.name %> <br>
+        <form action="list" method="post">
+            <input type="hidden" id="courseId" name="courseId" value="<%= obj._id %>">
+            <input type="hidden" id="courseName" name="courseName" value="<%= obj.name %>">
+            <button type="submit" name="action" value="delete">Delete</button>
+        </form>
+    </div>
+    <% }) %> 
+    <!--noformat-->
+</div>
