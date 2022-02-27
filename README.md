@@ -24,7 +24,6 @@ mongo < populate1.js
 mongo < populate2.js
 ```
 Time slots for courses have not been added yet for all courses.
-![Screenshot 2022-02-27 at 23-01-57 Login](https://user-images.githubusercontent.com/73381089/155893883-6dac97ee-87bf-4f60-b650-72b1bc642c95.png)
 
 How to run:
 ```
