@@ -20,8 +20,8 @@ One app solution for academics at IIT Mandi
 Make sure mongodb is running:
 How to populate database:
 ```
-mongo < db/populate1.js
-mongo < db/populate2.js
+mongo < populate1.js
+mongo < populate2.js
 ```
 Time slots for courses have not been added yet for all courses.
 
