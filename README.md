@@ -25,17 +25,22 @@ mongo < populate2.js
 ```
 Time slots for courses have not been added yet for all courses.
 
+Create a .env file with following contents:
+```
+SESSION_SECRET=secret
+```
+
 How to run:
 ```
 npm install
-npm run devStart
+node server.js
 ```
 
 Screenshots:
 ![Screenshot 2022-02-27 at 23-01-57 Login](https://user-images.githubusercontent.com/73381089/155893939-d8dfda2f-1cc6-4dcb-b6b3-689cdadba13e.png)
 
-![Screenshot 2022-02-27 at 23-28-32 Timetable](https://user-images.githubusercontent.com/73381089/155893923-6bad2fac-bb52-42eb-9cb4-d23a2493b8cd.png)
-
 ![Screenshot 2022-02-27 at 21-41-45 Home](https://user-images.githubusercontent.com/73381089/155893913-85dbd42d-3069-4828-b574-ca68c2f40213.png)
+
+![Screenshot 2022-02-27 at 23-28-32 Timetable](https://user-images.githubusercontent.com/73381089/155893923-6bad2fac-bb52-42eb-9cb4-d23a2493b8cd.png)
 
 ![Screenshot 2022-02-27 at 23-06-12 Courses](https://user-images.githubusercontent.com/73381089/155893907-05b01f71-353c-458d-a251-2b08d006b2e0.png)
