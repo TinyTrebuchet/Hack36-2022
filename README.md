@@ -1,5 +1,4 @@
 # Hack36-2022
-https://docs.google.com/document/d/1GtmYYYeVVTKkHREEW4asHD4sXGPeeIJvPKejkH2r-cw/edit?hl=en
 
 AIO-MONTI
 
@@ -17,3 +16,8 @@ One app solution for academics at IIT Mandi
 9. Group study and activities 
 10. Common announcement and communication with TAs and profs
 
+How to run:
+```
+npm install
+npm run devStart
+```
