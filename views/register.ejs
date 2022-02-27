@@ -1,17 +1,38 @@
-<h1>Register</h1>
-<form action="/register" method="POST">
-  <div>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/indexStyle.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Login</title>
+</head>
+
+<body>
+  <!--noformat-->
+  <% if (messages.error) { %>
+    <%= messages.error %>
+  <% } %>
+  <!--noformat-->
+
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <h2 class="active"> Sign Up </h2>
+
+      <!-- Login Form -->
+      <form action="register" method="POST">
+        <input type="text" id="name" class="fadeIn second" name="name" placeholder="name">
+        <input type="text" id="email" class="fadeIn second" name="email" placeholder="email">
+        <input type="password" id="password" class="fadeIn third" name="login" placeholder="password">
+        <input type="submit" class="fadeIn fourth" value="Register">
+      </form>
+
+      <div id="formFooter">
+        <a class="underlineHover" href="login">Login</a>
+      </div>
+
+    </div>
   </div>
-  <div>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required>
-  </div>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
-  </div>
-  <button type="submit">Register</button>
-</form>
-<a href="/login">Login</a>
+</body>

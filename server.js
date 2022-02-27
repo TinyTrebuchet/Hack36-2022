@@ -9,6 +9,7 @@ const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const path = require('path')
 const mongoose = require('mongoose')
 
 mongoose.connect("mongodb://localhost/hack36", { family: 4 })
@@ -73,7 +74,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   }
 })
 
-app.delete('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
   req.logOut()
   res.redirect('/login')
 })
@@ -121,6 +122,7 @@ app.get('/timetable', checkAuthenticated, async (req, res) => {
           courseId: course._id,
           courseStartTime: timeConvert(timeObj.startTime),
           courseEndTime: timeConvert(timeObj.endTime),
+          courseInstructor: course.instructor,
         })
       }
     })
@@ -360,5 +362,6 @@ async function getAllCoursesforStudent(studentId) {
   return [enrolledCourses, completedCourses, unEnrolledCourses]
 }
 
+app.use(express.static(path.join(__dirname, "views")));
 
 app.listen(3000)

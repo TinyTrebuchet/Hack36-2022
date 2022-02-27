@@ -1,19 +1,43 @@
-<h1>Courses</h1>
+<html lang="en">
 
-<div>
-    <a href="courses/completed" role="button">Completed courses</a>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css\timetable.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js\courses.js"></script>
+    <link rel="stylesheet" href="css\sus.css">
+    <link rel="stylesheet" href="css\style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Courses</title>
+</head>
 
-<br>
+<body>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-<div>
-    <a href="courses/list" role="button">All courses</a>
-</div>
+    <div id="mySidebar" class="sidebar" onmouseover="toggleSidebar()" onmouseout="toggleSidebar()">
+        <a href="timetable"><i class="material-icons">schedule</i><span
+                class="icon-text"></span>Timetable</span></a><br>
+        <a href="courses"><i class="material-icons">book</i><span class="icon-text"></span>Courses</span></a><br>
+        <a href="attendance"><i class="material-icons">bookmark</i><span
+                class="icon-text"></span>Attendance</span></a><br>
+        <a href="#"><i class="material-icons">assignment</i><span class="icon-text"></span>Assignment<span></a><br>
+        <a href="logout"><i class="material-icons">logout</i><span class="icon-text"></span>Logout<span></a>
+    </div>
+    <div id="main">
+        <center>
+            <h1 class="heading-section" style="font-size: 40px">Courses Manger</h1>
+        </center>
+        <center>
+            <div>
+                <a class="btn btn-primary" href="courses/completed" role="button">Completed</a>
+                <a class="btn btn-primary" href="courses/list" role="button">List</a>
+                <a class="btn btn-primary" href="courses/basket" role="button">Basket</a>
+                <a class="btn btn-primary" href="courses/minor" role="button">Minors</a>
+            </div>
+        </center>
+</body>
 
-<div>
-    <a href="courses/basket" role="button">Manage baskets</a>
-</div>
-
-<div>
-    <a href="courses/minor" role="button">Manage minors</a>
-</div>
+</html>
