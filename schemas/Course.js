@@ -1,17 +1,27 @@
 const mongoose = require('mongoose')
 
 const courseSchema = new mongoose.Schema({
-    id: {
+    _id: {
         type: String,
         required: true,
     },
 
-    name: String,
+    name: {
+        type: String,
+        required: true,
+    },
+
+    instructor: String,
 
     credit: {
         type: Number,
         required: true,
     },
+
+    offered: [{
+        branch: String,
+        offerType: String,
+    }],
 
     // time in minutes of a day
     // dayNumber: Sunday = 0, ...

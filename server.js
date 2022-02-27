@@ -11,18 +11,14 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 
-
 mongoose.connect("mongodb://localhost/hack36", { family: 4 })
-
-
-const initializePassport = require('./passport-config')
 
 
 const Student = require('./schemas/Student')
 const Course = require('./schemas/Course')
-const Pending = require('./schemas/Pending')
-const Completed = require('./schemas/Completed')
-
+const Basket = require('./schemas/Basket')
+const Minor = require('./schemas/Minor')
+const initializePassport = require('./passport-config')
 
 initializePassport(
   passport,
@@ -42,6 +38,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
+
 
 
 app.get('/', checkAuthenticated, (req, res) => {
@@ -84,13 +81,12 @@ app.delete('/logout', (req, res) => {
 
 
 app.get('/attendance', checkAuthenticated, async (req, res) => {
-  const pendingCourses = await Pending.where("student").equals(req.user._id).select("course daysAttended")
+  const pendingCourses = (await Student.findById(req.user._id).select("pending")).pending
 
   for (const obj of pendingCourses) {
-    const course = await Course.findById(obj.course)
+    const course = await Course.findById(obj.courseId)
 
-    obj.courseId = course.id
-    obj.daysTotal = course.time.length * (2 * 4 * 30)
+    obj.daysTotal = course.time.length * (2 * 4)
     // todo: 
     // hardcoded for total of 2 months, 4 weeks each
     // but actually, totalDays might be variable or maybe derived from Semester entity
@@ -99,12 +95,9 @@ app.get('/attendance', checkAuthenticated, async (req, res) => {
   res.render('attendance.ejs', { pendingCourses: pendingCourses })
 })
 
-app.get('/courses', checkAuthenticated, (req, res) => {
-  res.render('courses.ejs')
-})
 
 app.get('/timetable', checkAuthenticated, async (req, res) => {
-  const pendingCourses = await Pending.where("student").equals(req.user._id).select("course")
+  const pendingCourses = (await Student.findById(req.user._id).select("pending")).pending
   const coursesToday = []
   const today = new Date()
 
@@ -121,11 +114,11 @@ app.get('/timetable', checkAuthenticated, async (req, res) => {
   }
 
   for (const obj of pendingCourses) {
-    const course = await Course.findById(obj.course)
+    const course = await Course.findById(obj.courseId)
     course.time.forEach(timeObj => {
       if (timeObj.dayNumber === today.getDay()) {
         coursesToday.push({
-          courseId: course.id,
+          courseId: course._id,
           courseStartTime: timeConvert(timeObj.startTime),
           courseEndTime: timeConvert(timeObj.endTime),
         })
@@ -138,6 +131,165 @@ app.get('/timetable', checkAuthenticated, async (req, res) => {
 
   res.render('timetable.ejs', { coursesToday: coursesToday, today: today })
 })
+
+
+app.get('/courses', checkAuthenticated, (req, res) => {
+  res.render('courses.ejs')
+})
+
+
+app.get('/courses/completed', checkAuthenticated, async (req, res) => {
+  const completedCourses = (await Student.findById(req.user._id).select("completed")).completed
+
+  for (const obj of completedCourses) {
+    const course = await Course.findById(obj.courseId)
+
+    obj.courseName = course.name
+  }
+
+  res.render('courses/completed.ejs', { completedCourses: completedCourses })
+})
+
+app.get('/courses/list', checkAuthenticated, async (req, res) => {
+  [enrolledCourses, completedCourses, unEnrolledCourses] = await getAllCoursesforStudent(req.user._id)
+
+  res.render('courses/list.ejs', {
+    enrolledCourses: enrolledCourses,
+    completedCourses: completedCourses,
+    unEnrolledCourses: unEnrolledCourses,
+    message: "",
+  })
+})
+
+
+app.post('/courses/list', checkAuthenticated, async (req, res) => {
+  [enrolledCourses, completedCourses, unEnrolledCourses] = await getAllCoursesforStudent(req.user._id)
+
+  let message = ""
+
+  function sortObj(a, b) {
+    if (a._id > b._id)
+      return 1
+    if (a._id < b._id)
+      return -1
+    return 0
+  }
+
+  function sortCourse(a, b) {
+    if (a.courseId > b.courseId)
+      return 1
+    if (a.courseId < b.courseId)
+      return -1
+    return 0
+  }
+
+  if (req.body.action === 'enroll') {
+    if (unEnrolledCourses.map(obj => obj._id).includes(req.body.courseId)) {
+      const student = await Student.findById(req.user._id)
+      student.pending.push({ courseId: req.body.courseId, daysAttended: 0 })
+      student.pending.sort(sortCourse)
+      await student.save()
+
+      unEnrolledCourses = unEnrolledCourses.filter(obj => obj._id !== req.body.courseId)
+      enrolledCourses.push({ _id: req.body.courseId, name: req.body.courseName })
+      enrolledCourses.sort(sortObj)
+
+      message = "Enrolled successfully"
+    }
+    else {
+      message = "Error"
+    }
+  }
+
+  else if (req.body.action === 'unenroll') {
+    if (enrolledCourses.map(obj => obj._id).includes(req.body.courseId)) {
+      const student = await Student.findById(req.user._id)
+      student.pending = student.pending.filter(obj => obj.courseId !== req.body.courseId)
+      await student.save()
+
+      enrolledCourses = enrolledCourses.filter(obj => obj._id !== req.body.courseId)
+      unEnrolledCourses.push({ _id: req.body.courseId, name: req.body.courseName })
+      unEnrolledCourses.sort(sortObj)
+
+      message = "Un-Enrolled successfully"
+    }
+    else {
+      message = "Error"
+    }
+  }
+
+  else if (req.body.action === 'completed') {
+    const validGrade = ['A', 'B', 'C', 'D', 'E', 'F'].includes(req.body.grade)
+    const validSemester = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(Number(req.body.semester))
+    if (enrolledCourses.map(obj => obj._id).includes(req.body.courseId) && validGrade && validSemester) {
+      const student = await Student.findById(req.user._id)
+      student.pending = student.pending.filter(obj => obj.courseId !== req.body.courseId)
+      student.completed.push({ courseId: req.body.courseId, grade: req.body.grade, semester: req.body.semester })
+      student.completed.sort(sortCourse)
+      await student.save()
+
+      enrolledCourses = enrolledCourses.filter(obj => obj._id !== req.body.courseId)
+      completedCourses.push({ _id: req.body.courseId, name: req.body.courseName })
+      completedCourses.sort(sortObj)
+
+      message = "Completion successful"
+    }
+    else {
+      message = "Error"
+    }
+  }
+
+  else if (req.body.action === 'delete') {
+    if (completedCourses.map(obj => obj._id).includes(req.body.courseId)) {
+      const student = await Student.findById(req.user._id)
+      student.completed = student.completed.filter(obj => obj.courseId !== req.body.courseId)
+      await student.save()
+
+      completedCourses = completedCourses.filter(obj => obj._id !== req.body.courseId)
+      unEnrolledCourses.push({ _id: req.body.courseId, name: req.body.courseName })
+      unEnrolledCourses.sort(sortObj)
+
+      message = "Deletion successful"
+    }
+
+    else {
+      message = "Error"
+    }
+  }
+
+  else {
+    message = "Invalid action"
+  }
+
+  res.render('courses/list.ejs', {
+    enrolledCourses: enrolledCourses,
+    completedCourses: completedCourses,
+    unEnrolledCourses: unEnrolledCourses,
+    message: message,
+  })
+})
+
+
+app.get('/courses/basket', checkAuthenticated, async (req, res) => {
+  const baskets = await Basket.where()
+  const newBaskets = []
+  for (const basket of baskets) {
+    const courseArr = []
+    for (const courseId of basket.courses) {
+      const course = await Course.findById(courseId).select("name")
+      if (course) {
+        courseArr.push(course)
+      }
+    }
+    newBaskets.push({ name: basket.name, courses: courseArr })
+
+  }
+
+  console.log(JSON.stringify(newBaskets))
+
+  res.render('courses/basket.ejs', { baskets: newBaskets })
+})
+
 
 
 function checkAuthenticated(req, res, next) {
@@ -154,5 +306,43 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
+
+
+async function getAllCoursesforStudent(studentId) {
+  const enrolledCourses = []
+  const completedCourses = []
+
+  const enrolledIds = (await Student.findById(studentId).select("pending")).pending
+  for (const obj of enrolledIds) {
+    const course = await Course.findById(obj.courseId)
+    enrolledCourses.push({
+      _id: course._id,
+      name: course.name,
+    })
+  }
+
+  const completedIds = (await Student.findById(studentId).select("completed")).completed
+  for (const obj of completedIds) {
+    const course = await Course.findById(obj.courseId)
+    completedCourses.push({
+      _id: course._id,
+      name: course.name,
+    })
+  }
+
+  const hashCourse = ({ _id, name }) => `${_id}`
+
+  const allCourses = await Course.where().select("name")
+  const enrolledSet = new Set(enrolledCourses.map(hashCourse))
+  const completedSet = new Set(completedCourses.map(hashCourse))
+
+  const unEnrolledCourses = allCourses.filter(obj => {
+    const hashVal = hashCourse(obj)
+    return !(enrolledSet.has(hashVal) || completedSet.has(hashVal))
+  })
+
+  return [enrolledCourses, completedCourses, unEnrolledCourses]
+}
+
 
 app.listen(3000)

@@ -16,6 +16,17 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+
+    pending: [{
+        courseId: String,
+        daysAttended: Number,
+    }],
+
+    completed: [{
+        courseId: String,
+        grade: String,
+        semester: Number,
+    }],
 })
 
 module.exports = mongoose.model("Student", studentSchema)
