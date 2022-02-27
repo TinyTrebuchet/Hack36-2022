@@ -106,7 +106,7 @@ app.get('/timetable', checkAuthenticated, async (req, res) => {
     //todo: better time conversion
     minute = time % 60
     hour = Math.floor(time / 60)
-    if (minute % 10 === 0) {
+    if (minute < 10) {
       return `${hour}:0${minute}`
     }
     else {
