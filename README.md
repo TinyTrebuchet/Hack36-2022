@@ -17,6 +17,13 @@ One app solution for academics at IIT Mandi
 10. Group study and activities 
 11. Common announcement and communication with TAs and profs
 
+How to populate database:
+```
+mongo < db/populate1.js
+mongo < db/populate2.js
+```
+Time slots for courses have not been added yet for all courses.
+
 How to run:
 ```
 npm install
