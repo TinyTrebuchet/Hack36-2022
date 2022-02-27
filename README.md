@@ -17,6 +17,7 @@ One app solution for academics at IIT Mandi
 10. Group study and activities 
 11. Common announcement and communication with TAs and profs
 
+Make sure mongodb is running:
 How to populate database:
 ```
 mongo < db/populate1.js
