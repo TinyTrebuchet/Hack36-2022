@@ -32,7 +32,7 @@ SESSION_SECRET=secret
 
 How to run:
 ```
-npm install bcrypt ejs express express-flash express-session method-override passport passport-local dotenv
+npm install bcrypt ejs express express-flash express-session method-override passport passport-local dotenv mongoose
 node server.js
 ```
 
